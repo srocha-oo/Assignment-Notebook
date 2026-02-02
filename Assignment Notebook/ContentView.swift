@@ -8,13 +8,8 @@
 import SwiftUI
 
 struct ContentView: View {
-    struct AssignmentItem: Identifiable {
-        let id = UUID()
-        var course: String
-        var description: String
-        var dueDate: Date
-    }
-    @State private var assignmentItems = [
+   
+    @State private var assignmentList: [AssignmentItem] = [
         AssignmentItem(course: "Algebra", description: "Linear Equations", dueDate: Date()),
         AssignmentItem(course: "Science", description: "Atomic Bomb Lab", dueDate: Date()),
         AssignmentItem(course: "History", description: "Civil War Essay", dueDate: Date()),
@@ -23,21 +18,21 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(assignmentItems) { item in
+                ForEach(assignmentList) { item in
                     VStack(alignment: .leading) {
                         Text(item.course).font(.headline)
                         Text(item.description)
                     }
                 }
                 .onMove(perform: { indices, newOffset in
-                    assignmentItems.move(fromOffsets: indices, toOffset: newOffset)
+                    assignmentList.move(fromOffsets: indices, toOffset: newOffset)
                 })
                 .onDelete(perform: { indexSets in
-                    assignmentItems.remove(atOffsets: indexSets)
+                    assignmentList.remove(atOffsets: indexSets)
                 })
                 
             }
-            .navigationBarTitle("Assignment Noteboook", displayMode: .inline)
+            .navigationBarTitle("Assignment Notebook", displayMode: .inline)
             .navigationBarItems(leading: EditButton())
         }
     }

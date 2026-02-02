@@ -6,19 +6,20 @@
 //
 
 import Foundation
+import Observation
 
-struct AssignmentListItem: Identifiable {
+struct AssignmentItem: Identifiable {
     let id = UUID()
-    var priority: String
+    var course: String
     var description: String
     var dueDate: Date
 }
 
 @Observable
-class ToDoList {
-    var items = [
-        AssignmentListItem(priority: "High", description: "Take out trash", dueDate: Date()),
-        AssignmentListItem(priority: "Medium", description: "Pick up clothes", dueDate: Date()),
-        AssignmentListItem(priority: "Low", description: "Eat a donut", dueDate: Date())
+class AssignmentList {
+    var items: [AssignmentItem] = [
+        AssignmentItem(course: "High", description: "Take out trash", dueDate: Date()),
+        AssignmentItem(course: "Medium", description: "Pick up clothes", dueDate: Date()),
+        AssignmentItem(course: "Low", description: "Eat a donut", dueDate: Date())
     ]
 }
