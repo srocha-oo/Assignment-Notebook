@@ -8,35 +8,50 @@
 import SwiftUI
 
 struct ContentView: View {
-   
-    @State private var assignmentList: [AssignmentItem] = [
-        AssignmentItem(course: "Algebra", description: "Linear Equations", dueDate: Date()),
-        AssignmentItem(course: "Science", description: "Atomic Bomb Lab", dueDate: Date()),
-        AssignmentItem(course: "History", description: "Civil War Essay", dueDate: Date()),
-        AssignmentItem(course: "English", description: "AP Central Assignment", dueDate: Date())
-    ]
+    @State private var assignmentList = AssignmentList()
+    @State private var showingAddAssignmentView = false
     var body: some View {
         NavigationView {
             List {
-                ForEach(assignmentList) { item in
-                    VStack(alignment: .leading) {
-                        Text(item.course).font(.headline)
-                        Text(item.description)
+                ForEach(assignmentList.items) { item in
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text(item.course).font(.headline)
+                            Text(item.description)
+                        }
+                        Spacer()
+                        Text(item.dueDate, style: .date)
                     }
                 }
                 .onMove(perform: { indices, newOffset in
-                    assignmentList.move(fromOffsets: indices, toOffset: newOffset)
+                    assignmentList.items.move(fromOffsets: indices, toOffset: newOffset)
                 })
-                .onDelete(perform: { indexSets in
-                    assignmentList.remove(atOffsets: indexSets)
+                .onDelete(perform: { indexSet in
+                    assignmentList.items.remove(atOffsets: indexSet)
                 })
-                
+            }
+            .sheet(isPresented: $showingAddAssignmentView) {
+                AddAssignmentView()
+                    .environment(assignmentList)
             }
             .navigationBarTitle("Assignment Notebook", displayMode: .inline)
-            .navigationBarItems(leading: EditButton())
+            .navigationBarItems(leading: EditButton(),
+                                trailing: Button(action: {
+                                    showingAddAssignmentView = true
+                                    }, label: {
+                                        Image(systemName: "plus")
+            }))
         }
     }
 }
+
 #Preview {
     ContentView()
+}
+
+struct AssignmentItem: Identifiable, Codable {
+    var id = UUID()
+    var course = String()
+    var description = String()
+    var dueDate = Date()
 }

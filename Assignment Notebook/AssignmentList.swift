@@ -8,18 +8,22 @@
 import Foundation
 import Observation
 
-struct AssignmentItem: Identifiable {
-    let id = UUID()
-    var course: String
-    var description: String
-    var dueDate: Date
-}
-
 @Observable
 class AssignmentList {
-    var items: [AssignmentItem] = [
-        AssignmentItem(course: "High", description: "Take out trash", dueDate: Date()),
-        AssignmentItem(course: "Medium", description: "Pick up clothes", dueDate: Date()),
-        AssignmentItem(course: "Low", description: "Eat a donut", dueDate: Date())
-    ]
+    var items : [AssignmentItem] {
+       didSet {
+            if let encodedData = try? JSONEncoder().encode(items) {
+               UserDefaults.standard.set(encodedData, forKey: "data")
+           }
+        }
+    }
+    init() {
+        if let data = UserDefaults.standard.data(forKey: "data") {
+            if let decodedData = try? JSONDecoder().decode([AssignmentItem].self, from: data) {
+                items = decodedData
+                return
+            }
+        }
+        items = []
+    }
 }
