@@ -18,7 +18,7 @@ struct AddAssignmentView: View {
         NavigationView {
             Form {
                 Picker("Course", selection: $course) {
-                    ForEach(Self.courses, id: \.self) { priority in
+                    ForEach(Self.courses, id: \.self) { course in
                         Text(course).tag(course)
                     }
                 }
